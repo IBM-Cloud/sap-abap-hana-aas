@@ -10,10 +10,10 @@ nwapp_required_configurations:
   - "reqpkg"
   - "umask_SLES"
   - "hostname"
-  - "reboot"
   - "filesystems"
   - "limits"
   - "tmpfiles"
   - "uuidd"
   - "saptune"
+  - "reboot"
 ... 

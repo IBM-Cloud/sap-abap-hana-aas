@@ -1,25 +1,89 @@
-#Infra VPC variables
-REGION = "eu-de"
-ZONE = "eu-de-2"
-VPC = "ic4sap" # EXISTING Security group name
-SECURITY_GROUP = "ic4sap-securitygroup" # EXISTING Security group name
-SUBNET = "alint-de-subnet2" # EXISTING Subnet name
-HOSTNAME = "sapnwapp1065"
+##########################################################
+# General & Default VPC variables for CLI deployment
+##########################################################
+
+REGION = ""
+# Region for the VSI. Supported regions: https://cloud.ibm.com/docs/containers?topic=containers-regions-and-zones#zones-vpc
+# Edit the variable value with your deployment Region.
+# Example: REGION = "eu-de"
+
+ZONE = ""
+# Availability zone for VSI. Supported zones: https://cloud.ibm.com/docs/containers?topic=containers-regions-and-zones#zones-vpc
+# Edit the variable value with your deployment Zone.
+# Example: ZONE = "eu-de-1"
+
+VPC = ""
+# EXISTING VPC, previously created by the user in the same region as the VSI. The list of available VPCs: https://cloud.ibm.com/vpc-ext/network/vpcs
+# Example: VPC = "ic4sap"
+
+SECURITY_GROUP = ""
+# EXISTING Security group, previously created by the user in the same VPC. The list of available Security Groups: https://cloud.ibm.com/vpc-ext/network/securityGroups
+# Example: SECURITY_GROUP = "ic4sap-securitygroup"
+
+RESOURCE_GROUP = "Default"
+# EXISTING Resource group, previously created by the user. The list of available Resource Groups: https://cloud.ibm.com/account/resource-groups
+# Example: RESOURCE_GROUP = "wes-automation"
+
+SUBNET = "" 
+# EXISTING Subnet in the same region and zone as the VSI, previously created by the user. The list of available Subnets: https://cloud.ibm.com/vpc-ext/network/subnets
+# Example: SUBNET = "ic4sap-subnet"
+
+SSH_KEYS = [""]
+# List of SSH Keys UUIDs that are allowed to SSH as root to the VSI. The SSH Keys should be created for the same region as the VSI. The list of available SSH Keys UUIDs: https://cloud.ibm.com/vpc-ext/compute/sshKeys
+# Example: SSH_KEYS = ["r010-8f72b994-c17f-4500-af8f-d05680374t3c", "r011-8f72v884-c17f-4500-af8f-d05900374t3c"]
+
+ID_RSA_FILE_PATH = "ansible/id_rsa"
+# Input your existing id_rsa private key file path in OpenSSH format with 0600 permissions.
+# This private key it is used only during the terraform provisioning and it is recommended to be changed after the SAP deployment.
+# It must contain the relative or absoute path from your Bastion.
+# Examples: "ansible/id_rsa_sap_abap_hana_aas" , "~/.ssh/id_rsa_sap_abap_hana_aas" , "/root/.ssh/id_rsa".
+
+
+##########################################################
+# VSI variables:
+##########################################################
+
+HOSTNAME = ""
+#The Hostname for the VSI. The hostname must have up to 13 characters as required by SAP.
+#For more information on rules regarding hostnames for SAP systems, check SAP Note 611361: Hostnames of SAP ABAP Platform servers
+# Example: HOSTNAME = "sapnwapp"
+
 PROFILE = "bx2-4x16"
+# The VSI profile. Supported profiles for VSI: bx2-4x16. The list of available profiles: https://cloud.ibm.com/docs/vpc?topic=vpc-profiles&interface=ui
+
 IMAGE = "ibm-redhat-8-6-amd64-sap-applications-2"
-RESOURCE_GROUP = "wes-automation" # EXISTING Resource Group for VSI and volumes
-SSH_KEYS                = [ "r010-57bfc315-f9e5-46bf-bf61-d87a24a9ce7a" , "r010-3fcd9fe7-d4a7-41ce-8bb3-d96e936b2c7e" , "r010-771e15dd-8081-4cca-8844-445a40e6a3b3" , "r010-09325e15-15be-474e-9b3b-21827b260717" , "r010-5cfdb578-fc66-4bf7-967e-f5b4a8d03b89" , "r010-7b85d127-7493-4911-bdb7-61bf40d3c7d4" , "r010-d941534b-1d30-474e-9494-c26a88d4cda3" , "r010-e372fc6f-4aef-4bdf-ade6-c4b7c1ad61ca" ]
+# The list of available VPC Operating Systems supported by SAP: SAP note '2927211 - SAP Applications on IBM Virtual Private Cloud (VPC) Infrastructure environment' https://launchpad.support.sap.com/#/notes/2927211; The list of all available OS images: https://cloud.ibm.com/docs/vpc?topic=vpc-about-images
 
-##SAP system configuration
+
+##########################################################
+# SAP system configuration
+##########################################################
+
 sap_sid	= "NWD"
-sap_ci_host = "10.243.64.28"
-sap_ci_hostname = "sapnwci1065" 
-sap_ci_instance_number = "00"
-sap_ascs_instance_number = "01"
-hdb_instance_number = "00"
-sap_aas_instance_number = "00"
+#The SAP system ID identifies the entire SAP system
 
-#Kits paths
+sap_ci_host = ""
+#IP address of the existing SAP Central Instance
+
+sap_ci_hostname = "" 
+#The hostname of the existing SAP Central Instance
+
+sap_ci_instance_number = "00"
+#Technical identifier for internal processes of the Central Instance
+
+sap_ascs_instance_number = "01"
+#Technical identifier for internal processes of ASCS
+
+hdb_instance_number = "00"
+# The instance number of the SAP HANA database server
+
+sap_aas_instance_number = "00"
+#Technical identifier for internal processes of the additional application server
+
+##########################################################
+# Kit Paths
+##########################################################
+
 kit_sapcar_file = "/storage/NW75HDB/SAPCAR_1010-70006178.EXE"
 kit_swpm_file =  "/storage/NW75HDB/SWPM10SP31_7-20009701.SAR"
 kit_saphotagent_file = "/storage/NW75HDB/SAPHOSTAGENT51_51-20009394.SAR"
