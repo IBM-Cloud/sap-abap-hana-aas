@@ -20,11 +20,11 @@ SECURITY_GROUP = ""
 # EXISTING Security group, previously created by the user in the same VPC. The list of available Security Groups: https://cloud.ibm.com/vpc-ext/network/securityGroups
 # Example: SECURITY_GROUP = "ic4sap-securitygroup"
 
-RESOURCE_GROUP = "Default"
+RESOURCE_GROUP = ""
 # EXISTING Resource group, previously created by the user. The list of available Resource Groups: https://cloud.ibm.com/account/resource-groups
 # Example: RESOURCE_GROUP = "wes-automation"
 
-SUBNET = "" 
+SUBNET = ""
 # EXISTING Subnet in the same region and zone as the VSI, previously created by the user. The list of available Subnets: https://cloud.ibm.com/vpc-ext/network/subnets
 # Example: SUBNET = "ic4sap-subnet"
 
@@ -37,6 +37,28 @@ ID_RSA_FILE_PATH = "ansible/id_rsa"
 # This private key it is used only during the terraform provisioning and it is recommended to be changed after the SAP deployment.
 # It must contain the relative or absoute path from your Bastion.
 # Examples: "ansible/id_rsa_sap_abap_hana_aas" , "~/.ssh/id_rsa_sap_abap_hana_aas" , "/root/.ssh/id_rsa".
+
+##########################################################
+# Activity Tracker variables:
+##########################################################
+
+ATR_PROVISION = ""
+# Enables (ATR_PROVISION=true) or not (ATR_PROVISION=false) the provisioning of a new Activity Tracker instance. Default value: true
+# Example to create Activity Tracker instance: ATR_PROVISION=true
+# Example to use existing Activity Tracker instance : ATR_PROVISION=false
+
+ATR_NAME = ""
+# The name of the Activity Tracker instance to be created or the name of an existent Activity Tracker instance, in the same region chosen for SAP system deployment.
+# Example: ATR_NAME="Activity-Tracker-SAP-eu-de"
+
+ATR_TAGS = [""]
+# Optional parameter. A list of user tags associated with the activity tracker instance.
+# Example: ATR_TAGS = ["activity-tracker-cos"]
+
+ATR_PLAN = ""
+# Mandatory only if ATR_PROVISION is set to true. The list of service plans - https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-service_plan#service_plan
+# Default value: "lite"
+# Example: ATR_PLAN = "7-day"
 
 
 ##########################################################
@@ -59,32 +81,36 @@ IMAGE = "ibm-redhat-8-6-amd64-sap-applications-2"
 # SAP system configuration
 ##########################################################
 
-sap_sid	= "NWD"
-#The SAP system ID identifies the entire SAP system
+SAP_SID	= "NWD"
+# The SAP system ID identifies the entire SAP system
 
-sap_ci_host = ""
-#IP address of the existing SAP Central Instance
+SAP_CI_HOST = ""
+# IP address of the existing SAP Central Instance
 
-sap_ci_hostname = "" 
-#The hostname of the existing SAP Central Instance
+SAP_CI_HOSTNAME = "" 
+# The hostname of the existing SAP Central Instance
 
-sap_ci_instance_number = "00"
-#Technical identifier for internal processes of the Central Instance
+SAP_CI_INSTANCE_NUMBER = "00"
+# Technical identifier for internal processes of the Central Instance
+# The SAP central instance number. Should follow the SAP rules for instance number naming.
+# Example: SAP_CI_INSTANCE_NUMBER = "00"
 
-sap_ascs_instance_number = "01"
-#Technical identifier for internal processes of ASCS
+SAP_ASCS_INSTANCE_NUMBER = "01"
+# The central ABAP service instance number. Should follow the SAP rules for instance number naming.
+# Technical identifier for internal processes of ASCS
+# Example: SAP_ASCS_INSTANCE_NUMBER = "01"
 
-hdb_instance_number = "00"
+HDB_INSTANCE_NUMBER = "00"
 # The instance number of the SAP HANA database server
 
-sap_aas_instance_number = "00"
-#Technical identifier for internal processes of the additional application server
+SAP_AAS_INSTANCE_NUMBER = "00"
+# Technical identifier for internal processes of the additional application server
 
 ##########################################################
 # Kit Paths
 ##########################################################
 
-kit_sapcar_file = "/storage/NW75HDB/SAPCAR_1010-70006178.EXE"
-kit_swpm_file =  "/storage/NW75HDB/SWPM10SP31_7-20009701.SAR"
-kit_saphotagent_file = "/storage/NW75HDB/SAPHOSTAGENT51_51-20009394.SAR"
-kit_hdbclient_file = "/storage/NW75HDB/IMDB_CLIENT20_009_28-80002082.SAR"
+KIT_SAPCAR_FILE = "/storage/NW75HDB/SAPCAR_1010-70006178.EXE"
+KIT_SWPM_FILE =  "/storage/NW75HDB/SWPM10SP31_7-20009701.SAR"
+KIT_SAPHOSTAGENT_FILE = "/storage/NW75HDB/SAPHOSTAGENT51_51-20009394.SAR"
+KIT_HDBCLIENT_FILE = "/storage/NW75HDB/IMDB_CLIENT20_009_28-80002082.SAR"
