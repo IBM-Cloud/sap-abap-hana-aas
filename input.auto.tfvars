@@ -42,24 +42,9 @@ ID_RSA_FILE_PATH = "ansible/id_rsa"
 # Activity Tracker variables:
 ##########################################################
 
-ATR_PROVISION = ""
-# Enables (ATR_PROVISION=true) or not (ATR_PROVISION=false) the provisioning of a new Activity Tracker instance. Default value: true
-# Example to create Activity Tracker instance: ATR_PROVISION=true
-# Example to use existing Activity Tracker instance : ATR_PROVISION=false
-
 ATR_NAME = ""
-# The name of the Activity Tracker instance to be created or the name of an existent Activity Tracker instance, in the same region chosen for SAP system deployment.
+# The name of the Activity Tracker instance, in the same region chosen for SAP system deployment.
 # Example: ATR_NAME="Activity-Tracker-SAP-eu-de"
-
-ATR_TAGS = [""]
-# Optional parameter. A list of user tags associated with the activity tracker instance.
-# Example: ATR_TAGS = ["activity-tracker-cos"]
-
-ATR_PLAN = ""
-# Mandatory only if ATR_PROVISION is set to true. The list of service plans - https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-service_plan#service_plan
-# Default value: "lite"
-# Example: ATR_PLAN = "7-day"
-
 
 ##########################################################
 # VSI variables:
@@ -73,9 +58,8 @@ HOSTNAME = ""
 PROFILE = "bx2-4x16"
 # The VSI profile. Supported profiles for VSI: bx2-4x16. The list of available profiles: https://cloud.ibm.com/docs/vpc?topic=vpc-profiles&interface=ui
 
-IMAGE = "ibm-redhat-8-6-amd64-sap-applications-2"
+IMAGE = "ibm-redhat-8-6-amd64-sap-applications-4"
 # The list of available VPC Operating Systems supported by SAP: SAP note '2927211 - SAP Applications on IBM Virtual Private Cloud (VPC) Infrastructure environment' https://launchpad.support.sap.com/#/notes/2927211; The list of all available OS images: https://cloud.ibm.com/docs/vpc?topic=vpc-about-images
-
 
 ##########################################################
 # SAP system configuration

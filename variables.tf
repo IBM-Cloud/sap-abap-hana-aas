@@ -34,22 +34,23 @@ variable "SSH_KEYS" {
 	}
 }
 
+
 variable "REGION" {
-	type		= string
-	description	= "The cloud region where to deploy the solution. The regions and zones for VPC are listed here: https://cloud.ibm.com/docs/containers?topic=containers-regions-and-zones#zones-vpc. Review supported locations in IBM Cloud Schematics here: https://cloud.ibm.com/docs/schematics?topic=schematics-locations"
-	validation {
-		condition     = contains(["au-syd", "jp-osa", "jp-tok", "eu-de", "eu-gb", "ca-tor", "us-south", "us-east", "br-sao"], var.REGION )
-		error_message = "The REGION must be one of: au-syd, jp-osa, jp-tok, eu-de, eu-gb, ca-tor, us-south, us-east, br-sao."
-	}
+        type            = string
+        description     = "The cloud region where to deploy the solution. The regions and zones for VPC are listed here:https://cloud.ibm.com/docs/containers?topic=containers-regions-and-zones#zones-vpc. Review supported locations in IBM Cloud Schematics here: https://cloud.ibm.com/docs/schematics?topic=schematics-locations."
+        validation {
+                condition     = contains(["au-syd", "jp-osa", "jp-tok", "eu-de", "eu-gb", "ca-tor", "us-south", "us-east", "br-sao"], var.REGION )
+                error_message = "For CLI deployments, the REGION must be one of: au-syd, jp-osa, jp-tok, eu-de, eu-gb, ca-tor, us-south, us-east, br-sao. \n For Schematics, the REGION must be one of: eu-de, eu-gb, us-south, us-east."
+        }
 }
 
 variable "ZONE" {
-	type		= string
-	description	= "The cloud zone where to deploy the solution."
-	validation {
-		condition     = length(regexall("^(eu-de|eu-gb|us-south|us-east)-(1|2|3)$", var.ZONE)) > 0
-		error_message = "The ZONE is not valid."
-	}
+        type            = string
+        description     = "The cloud zone where to deploy the solution."
+        validation {
+                condition     = length(regexall("^(au-syd|jp-osa|jp-tok|eu-de|eu-gb|ca-tor|us-south|us-east|br-sao)-(1|2|3)$", var.ZONE)) > 0
+                error_message = "The ZONE is not valid."
+        }
 }
 
 variable "VPC" {
@@ -91,27 +92,8 @@ variable "RESOURCE_GROUP" {
 
 variable "ATR_NAME" {
   type        = string
-  description = "Provide the Activity Tracker instance name to create or provide the existing Activity Tracker instance name in the same region where this solution is to be be deployed."
-  nullable	  = false
-}
-
-variable "ATR_PROVISION" {
-  type        = bool
-  description = "Activity Tracker : Disable this to not provision Activity Tracker instance. If an Activity Tracker instance already exists in the same region where this solution is to be deployed then disable (ATR_PROVISION=false) this to avoid provisioning an Activity Tracker instance.  A new instance of Activity Tracker will be deployed with this solution if ATR_PROVISION=true."
-  default     = true
-}
-
-variable "ATR_PLAN" {
-  type        = string
-  description = "Mandatory only if ATR_PROVISION is set to true. Activity Tracker: The type of plan the service instance should run under (lite, 7-day, 14-day, or 30-day). The list of service plan is avaialble here: https://cloud.ibm.com/docs/activity-tracker?topic=activity-tracker-service_plan#service_plan"
-  default = "lite"
-  
-}
-
-variable "ATR_TAGS" {
-  type        = list(string)
-  description = "Activity Tracker:  (Optional) only if ATR_PROVISION=true, tags that should be applied to the Activity Tracker instance."
-  default     = null
+  description = "The name of the EXISTING Activity Tracker instance, in the same region as HANA VSI. The list of available Activity Tracker is available here: https://cloud.ibm.com/observe/activitytracker"
+  default = ""
 }
 
 variable "HOSTNAME" {
@@ -132,7 +114,7 @@ variable "PROFILE" {
 variable "IMAGE" {
 	type		= string
 	description = "The OS image used for the VSI. A list of images is available here: https://cloud.ibm.com/docs/vpc?topic=vpc-about-images"
-	default		= "ibm-redhat-8-4-amd64-sap-applications-2"
+	default		= "ibm-redhat-8-6-amd64-sap-applications-4"
 }
 
 data "ibm_is_instance" "vsi" {
@@ -141,21 +123,9 @@ data "ibm_is_instance" "vsi" {
 }
 
 
-variable "VOL1" {
-	type		= string
-	description = "Volume 1 Size - The size for the disks in GB that are to be attached to the VSI and used by SAP"
-	default		= "40"
-}
-
-variable "VOL2" {
-	type		= string
-	description = "Volume 2 Size - The size for the disks in GB that are to be attached to the VSI and used by SAP"
-	default		= "64"
-}
-
 variable "SAP_SID" {
 	type		= string
-	description = "The SAP system ID identifies the entire SAP system."
+	description = "The SAP system ID. Identifies the entire SAP system. The SAP SID must be the same as the one on the primary application server (SAP CI HOST). Consists of exactly three alphanumeric characters and the first character must be a letter. Does not include any of the reserved IDs listed in SAP Note 1979280"
 	default		= "NWD"
 }
 
@@ -171,13 +141,13 @@ variable "SAP_CI_HOSTNAME" {
 
 variable "SAP_CI_INSTANCE_NUMBER" {
 	type		= string
-	description = "Technical identifier for internal processes of the Central Instance"
+	description = "The SAP central instance number. Technical identifier for internal processes of CI. Consists of a two-digit number from 00 to 97. Must be unique on a host. Must follow the SAP rules for instance number naming"
 	default		= "00"
 }
 
 variable "SAP_ASCS_INSTANCE_NUMBER" {
 	type		= string
-	description = "Technical identifier for internal processes of ASCS"
+	description = "The central ABAP service instance number. Technical identifier for internal processes of ASCS. Consists of a two-digit number from 00 to 97. Must be unique on a host. Must follow the SAP rules for instance number naming"
 	default		= "01"
 }
 
@@ -189,14 +159,14 @@ variable "HDB_INSTANCE_NUMBER" {
 
 variable "SAP_AAS_INSTANCE_NUMBER" {
 	type		= string
-	description = "Technical identifier for internal processes of the additional application server"
+	description = "The SAP additional application server instance number. Technical identifier for internal processes of AAS. Consists of a two-digit number from 00 to 97. Must be unique on a host. Must follow the SAP rules for instance number naming"
 	default		= "00"
 }
 
 variable "SAP_MAIN_PASSWORD" {
 	type		= string
 	sensitive = true
-	description = "Common password for all users that are created during the installation (See Obs*)."
+	description = "Common password for all users that are created during the installation. It must be 10 to 14 characters long. It must contain at least one digit (0-9). It can only contain the following characters: a-z, A-Z, 0-9, @, #, $, _. It must not start with a digit or an underscore ( _ )"
 	validation {
 		condition     = length(regexall("^(.{0,9}|.{15,}|[^0-9]*)$", var.SAP_MAIN_PASSWORD)) == 0 && length(regexall("^[^0-9_][0-9a-zA-Z@#$_]+$", var.SAP_MAIN_PASSWORD)) > 0
 		error_message = "The SAP_MAIN_PASSWORD is not valid."
@@ -226,3 +196,29 @@ variable "KIT_HDBCLIENT_FILE" {
 	description = "Path to HANA DB client archive (SAR). As downloaded from SAP Support Portal"
 	default		= "/storage/NW75HDB/IMDB_CLIENT20_009_28-80002082.SAR"
 }
+
+# ATR variable and conditions
+locals {
+        VOL1 = 40
+	VOL2 = 64
+	ATR_ENABLE = true
+}
+
+resource "null_resource" "check_atr_name" {
+  count             = local.ATR_ENABLE == true ? 1 : 0
+  lifecycle {
+    precondition {
+      condition     = var.ATR_NAME != "" && var.ATR_NAME != null
+      error_message = "The name of an EXISTENT Activity Tracker in the same region must be specified."
+    }
+  }
+}
+
+data "ibm_resource_instance" "activity_tracker" {
+  count             = local.ATR_ENABLE == true ? 1 : 0
+  name              = var.ATR_NAME
+  location          = var.REGION
+  service           = "logdnaat"
+}
+
+

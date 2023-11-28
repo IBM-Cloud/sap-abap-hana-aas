@@ -23,17 +23,6 @@ module "precheck-ssh-exec" {
   
 }
 
-module "activity-tracker" {
-  source  = "./modules/activity-tracker"
-  depends_on = [ module.precheck-ssh-exec ]
-  RESOURCE_GROUP = var.RESOURCE_GROUP
-  ATR_PROVISION = var.ATR_PROVISION
-  REGION = var.REGION
-  ATR_NAME = var.ATR_NAME
-  ATR_PLAN = var.ATR_PLAN
-  ATR_TAGS = var.ATR_TAGS
-}
-
 module "vpc-subnet" {
   source		= "./modules/vpc/subnet"
   VPC			= var.VPC
@@ -44,12 +33,11 @@ module "vpc-subnet" {
 
 module "volumes" {
   source		= "./modules/volumes"
-  depends_on = [ module.activity-tracker ]
   ZONE			= var.ZONE
   RESOURCE_GROUP = var.RESOURCE_GROUP
   HOSTNAME		= var.HOSTNAME
-  VOL1			= var.VOL1
-  VOL2			= var.VOL2
+  VOL1			= local.VOL1
+  VOL2			= local.VOL2
 }
 
 
